@@ -1,17 +1,18 @@
-// List of keywords to filter
 const keywords = ["ohio", "skibidi toilet"];
 
-// Function to filter comments
 function filterComments() {
-  const comments = document.querySelectorAll("#comments #content-text");
-  
+  const comments = document.querySelectorAll("ytd-comment-renderer #content");
+
   comments.forEach(comment => {
     const commentText = comment.textContent.toLowerCase();
-    
+
     for (let keyword of keywords) {
       if (commentText.includes(keyword)) {
-        // Hide comment if it contains a filtered keyword
-        comment.closest("#comment").style.display = "none";
+        // Find the container of the comment and hide it
+        let commentContainer = comment.closest("ytd-comment-thread-renderer");
+        if (commentContainer) {
+          commentContainer.style.display = "none";
+        }
         break; // Exit the loop if one keyword is found
       }
     }
@@ -19,5 +20,8 @@ function filterComments() {
 }
 
 // Run the filter when the page is loaded or when new comments are loaded dynamically
-document.addEventListener("DOMContentLoaded", filterComments);
+document.addEventListener("yt-visibility-refresh", filterComments);
 document.addEventListener("yt-navigate-finish", filterComments); // For dynamic page changes
+
+// Initial run on existing comments
+filterComments();
